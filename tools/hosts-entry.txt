@@ -1,0 +1,11 @@
+# Add this line to C:\Windows\System32\drivers\etc\hosts (requires admin):
+127.0.0.1 web-aguaboa.local
+
+# You can add the entry manually with a text editor run as Administrator, or use PowerShell (run as Administrator):
+# Backup hosts and then add the line
+Copy-Item -Path 'C:\Windows\System32\drivers\etc\hosts' -Destination 'C:\Windows\System32\drivers\etc\hosts.bak'
+Add-Content -Path 'C:\Windows\System32\drivers\etc\hosts' -Value "`n127.0.0.1 web-aguaboa.local"
+
+# After adding, restart Apache (use XAMPP Control Panel or):
+# Restart-Service -Name 'Apache2.4' -Force
+# Then open: http://web-aguaboa.local/departments

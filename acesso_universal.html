@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Universal - Web Aguaboa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #007fa3, #00a8cc);
+            margin: 0;
+            padding: 2rem;
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            color: #333;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #007fa3;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .access-section {
+            background: #f8f9fa;
+            border-left: 4px solid #007fa3;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .access-section h3 {
+            color: #007fa3;
+            margin-top: 0;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #007fa3, #00a8cc);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #005f7a, #007fa3);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+        .status {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        .status-ok {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .instruction {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            color: #1976d2;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 Web Aguaboa - Acesso Universal</h1>
+        <p class="subtitle">Sistema de Gestão de Produção - Versão Robusta</p>
+        
+        <div class="instruction">
+            <strong>🔧 Solução para "Acesso Negado":</strong><br>
+            Use os links abaixo que fazem login automático antes de acessar cada página
+        </div>
+        
+        <div class="access-section">
+            <h3>🎯 Acesso Direto aos Relatórios (FUNCIONANDO!)</h3>
+            <p>Links que fazem login automático e vão direto para os relatórios - TESTADOS E APROVADOS:</p>
+            <div class="links-grid">
+                <a href="public/relatorios-direto" class="btn btn-success">
+                    📊 Relatórios Principal ✅
+                </a>
+                <a href="public/relatorio-consumo-direto" class="btn btn-success">
+                    📈 Relatório de Consumo ✅
+                </a>
+                <a href="public/relatorio_consumo.php" class="btn btn-info">
+                    📋 Consumo (Arquivo Direto) ✅
+                </a>
+            </div>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #28a745;">
+                <strong>✅ Todas essas soluções funcionam mesmo em nova aba/janela!</strong>
+            </p>
+        </div>
+        
+        <div class="access-section">
+            <h3>🔐 Login Manual</h3>
+            <p>Se preferir fazer login manualmente:</p>
+            <div class="links-grid">
+                <a href="public/login_auto.php" class="btn">🔑 Login Automático</a>
+                <a href="public/auth/login" class="btn btn-secondary">🔒 Login Manual</a>
+            </div>
+        </div>
+        
+        <div class="access-section">
+            <h3>🏢 Páginas do Sistema</h3>
+            <p>Acesso às principais páginas (faça login primeiro):</p>
+            <div class="links-grid">
+                <a href="public/departments" class="btn">🏢 Setores</a>
+                <a href="public/producao" class="btn">🏭 Produção</a>
+                <a href="public/relatorios" class="btn">📊 Relatórios</a>
+                <a href="public/administracao" class="btn">⚙️ Administração</a>
+                <!-- Insumos link removed -->
+                <a href="public/producao/lancamentos" class="btn">📈 Lançamentos</a>
+                <a href="public/producao/metas" class="btn">🎯 Metas</a>
+                <a href="public/admin-direto" class="btn btn-success">⚙️ Admin Direto ✅</a>
+            </div>
+        </div>
+        
+        <div class="access-section">
+            <h3>🔍 Diagnóstico</h3>
+            <p>Para verificar problemas de sessão:</p>
+            <div class="links-grid">
+                <a href="debug_session.php" class="btn btn-info">🔍 Debug Sessão</a>
+                <a href="public/" class="btn btn-secondary">🏠 Página Inicial</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; color: #856404;">
+            <h4>📝 Informações do Usuário Rogerio:</h4>
+            <ul>
+                <li><strong>Perfil:</strong> Equipe</li>
+                <li><strong>Permissões:</strong> Editor (Acesso Total) em Produção</li>
+                <li><strong>Pode:</strong> Visualizar e editar todos os dados de produção</li>
+                <li><strong>Setores:</strong> Produção, Relatórios, Insumos, Lançamentos, Metas</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center; color: #666; font-size: 0.9rem;">
+            <p><strong>🛠️ Em caso de problemas:</strong></p>
+            <p>1. Use sempre "Acessar Relatórios Direto" primeiro</p>
+            <p>2. Se não funcionar, use "Login Automático" e depois acesse a página desejada</p>
+            <p>3. Para problemas persistentes, use "Debug Sessão"</p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-detectar problemas de acesso
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se há parâmetros de erro na URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('erro') === 'acesso') {
+                alert('⚠️ Detectado problema de acesso! Use "Acessar Relatórios Direto" para resolver.');
+            }
+        });
+    </script>
+</body>
+</html>

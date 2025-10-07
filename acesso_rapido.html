@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Rápido - Web Aguaboa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #007fa3, #00a8cc);
+            margin: 0;
+            padding: 2rem;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            color: #333;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #007fa3;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .link-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        .link-card:hover {
+            border-color: #007fa3;
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+        .link-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #007fa3;
+        }
+        .login-info {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            color: #388e3c;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 Web Aguaboa - Acesso Rápido</h1>
+        
+        <div class="login-info">
+            <strong>🔑 Para acessar:</strong> Clique primeiro em "Login Automático" e depois em qualquer página desejada
+        </div>
+        
+        <div class="links">
+            <a href="public/login_auto.php" class="link-card">
+                <h3>🔐 Login Automático</h3>
+                <p>Fazer login como Rogerio</p>
+            </a>
+            
+            <a href="public/departments" class="link-card">
+                <h3>🏢 Setores</h3>
+                <p>Seleção de setores</p>
+            </a>
+            
+            <a href="public/producao" class="link-card">
+                <h3>🏭 Produção</h3>
+                <p>Gestão de produção</p>
+            </a>
+            
+            <a href="public/relatorios" class="link-card">
+                <h3>📊 Relatórios</h3>
+                <p>Relatórios de produção</p>
+            </a>
+            
+            <!-- Insumos quick link removed -->
+            
+            <a href="public/producao/lancamentos" class="link-card">
+                <h3>📈 Lançamentos</h3>
+                <p>Lançamentos de produção</p>
+            </a>
+            
+            <a href="debug_session.php" class="link-card">
+                <h3>🔍 Debug Sessão</h3>
+                <p>Verificar status da sessão</p>
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center; color: #666; font-size: 0.9rem;">
+            <p><strong>Instruções:</strong></p>
+            <p>1. Clique em "Login Automático" primeiro</p>
+            <p>2. Aguarde o login ser processado</p>
+            <p>3. Acesse qualquer página desejada</p>
+            <p>4. O usuário Rogerio tem permissão de <strong>edição</strong> em Produção</p>
+        </div>
+    </div>
+</body>
+</html>
