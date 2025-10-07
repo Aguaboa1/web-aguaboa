@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🔧 Debug JavaScript - Edição</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 3px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .log { background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 4px; font-family: monospace; height: 300px; overflow-y: auto; }
+        .form-group { margin: 10px 0; }
+        input, textarea { width: 300px; padding: 8px; }
+        .checkbox-group { display: flex; align-items: center; margin: 10px 0; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug JavaScript - Erro de Edição</h1>
+    
+    <div class="section">
+        <h3>1. Teste da Requisição de Edição</h3>
+        
+        <div class="form-group">
+            <label>ID da Ação:</label>
+            <input type="number" id="actionId" value="1">
+        </div>
+        
+        <div class="form-group">
+            <label>Data:</label>
+            <input type="date" id="dataAcao" value="2025-10-01">
+        </div>
+        
+        <div class="form-group">
+            <label>Descrição:</label>
+            <textarea id="descricao">5% de desconto</textarea>
+        </div>
+        
+        <div class="checkbox-group">
+            <input type="checkbox" id="temPrazo" checked>
+            <label>Tem prazo de conclusão</label>
+        </div>
+        
+        <div class="form-group">
+            <label>Prazo:</label>
+            <input type="month" id="prazoInput" value="2025-12">
+        </div>
+        
+        <button onclick="testarEdicao()">Testar Edição</button>
+        <button onclick="testarRequisicaoCompleta()">Teste Completo</button>
+    </div>
+    
+    <div class="section">
+        <h3>2. Log de Debug</h3>
+        <button onclick="limparLog()">Limpar</button>
+        <div id="logDebug" class="log"></div>
+    </div>
+    
+    <div class="section">
+        <h3>3. Resultado da Requisição</h3>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('logDebug');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            logDiv.innerHTML += `[${timestamp}] ${icon} ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function limparLog() {
+            document.getElementById('logDebug').innerHTML = '';
+        }
+        
+        async function testarEdicao() {
+            log('🔧 Iniciando teste de edição...');
+            
+            const actionId = document.getElementById('actionId').value;
+            const dataAcao = document.getElementById('dataAcao').value;
+            const descricao = document.getElementById('descricao').value;
+            const temPrazo = document.getElementById('temPrazo').checked;
+            const prazoInput = document.getElementById('prazoInput').value;
+            
+            log(`ID: ${actionId}`);
+            log(`Data: ${dataAcao}`);
+            log(`Descrição: ${descricao}`);
+            log(`Tem prazo: ${temPrazo}`);
+            log(`Prazo: ${prazoInput}`);
+            
+            try {
+                const formData = new FormData();
+                formData.append('descricao', descricao);
+                formData.append('data_acao', dataAcao);
+                
+                if (temPrazo && prazoInput) {
+                    formData.append('prazo_conclusao', prazoInput);
+                    log(`✅ Prazo adicionado: ${prazoInput}`);
+                } else {
+                    log('⚪ Sem prazo definido');
+                }
+                
+                // Log do FormData
+                log('📤 FormData criado:');
+                for (let [key, value] of formData.entries()) {
+                    log(`  ${key}: ${value}`);
+                }
+                
+                log('🚀 Enviando requisição...');
+                
+                const response = await fetch(`/action/${actionId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`📥 Resposta recebida - Status: ${response.status}`);
+                
+                // Log dos headers
+                log('📋 Headers da resposta:');
+                for (let [name, value] of response.headers) {
+                    log(`  ${name}: ${value}`);
+                }
+                
+                // Ler resposta como texto primeiro
+                const responseText = await response.text();
+                log(`📄 Resposta bruta: ${responseText}`);
+                
+                // Tentar parsear JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                    log(`✅ JSON parseado com sucesso`);
+                } catch (parseError) {
+                    log(`❌ Erro ao parsear JSON: ${parseError.message}`, 'error');
+                    data = { error: 'Resposta não é JSON válido', raw: responseText };
+                }
+                
+                // Mostrar resultado
+                document.getElementById('resultado').innerHTML = `
+                    <h4>Resultado:</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <h4>Status: ${response.status}</h4>
+                    <h4>Headers:</h4>
+                    <pre>${JSON.stringify([...response.headers.entries()], null, 2)}</pre>
+                    <h4>Resposta Bruta:</h4>
+                    <pre>${responseText}</pre>
+                `;
+                
+                if (data.success) {
+                    log('✅ Sucesso na edição!', 'success');
+                } else {
+                    log(`❌ Erro na edição: ${data.message || 'Erro desconhecido'}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro na requisição: ${error.message}`, 'error');
+                document.getElementById('resultado').innerHTML = `
+                    <div style="color: red;">
+                        <h4>Erro:</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testarRequisicaoCompleta() {
+            log('🔍 Teste completo da requisição...');
+            
+            // 1. Primeiro carregar a ação
+            try {
+                log('📥 1. Carregando ação...');
+                const response1 = await fetch('/action/1');
+                const action = await response1.json();
+                log(`✅ Ação carregada: ${JSON.stringify(action)}`);
+                
+                // 2. Depois tentar editar
+                log('📝 2. Tentando editar...');
+                await testarEdicao();
+                
+            } catch (error) {
+                log(`❌ Erro no teste completo: ${error.message}`, 'error');
+            }
+        }
+        
+        // Log inicial
+        log('🚀 Sistema de debug carregado');
+    </script>
+</body>
+</html>

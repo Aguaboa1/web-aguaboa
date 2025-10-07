@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste de Cadastro de Produto</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input, select, textarea { width: 100%; max-width: 300px; padding: 0.5rem; }
+        button { padding: 1rem 2rem; background: #007fa3; color: white; border: none; cursor: pointer; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Cadastro de Produto</h1>
+    
+    <form method="POST" action="/gestao-aguaboa-php/public/processar_producao.php">
+        <input type="hidden" name="action" value="create_produto">
+        
+        <div class="form-group">
+            <label>Nome do Produto:</label>
+            <input type="text" name="nome" value="Água Teste Form 1.5L" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Código:</label>
+            <input type="text" name="codigo" value="TESTFORM15L" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Categoria:</label>
+            <select name="categoria">
+                <option value="Água Mineral">Água Mineral</option>
+                <option value="Sucos">Sucos</option>
+                <option value="Refrigerantes">Refrigerantes</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Unidade:</label>
+            <select name="unidade_medida">
+                <option value="UN">Unidade</option>
+                <option value="L">Litros</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Capacidade (Litros):</label>
+            <input type="number" name="capacidade_litros" value="1.5" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Descrição:</label>
+            <textarea name="descricao">Produto de teste via formulário HTML</textarea>
+        </div>
+        
+        <button type="submit">🚀 Cadastrar Produto de Teste</button>
+    </form>
+    
+    <hr style="margin: 2rem 0;">
+    
+    <h2>📝 Instruções para Teste:</h2>
+    <ol>
+        <li>Primeiro, faça login no sistema: <a href="/gestao-aguaboa-php/public/" target="_blank">http://localhost/gestao-aguaboa-php/public/</a></li>
+        <li>Use as credenciais: <strong>Producao</strong> / <strong>producao123</strong></li>
+        <li>Volte para esta página e clique no botão "Cadastrar Produto de Teste"</li>
+        <li>Verifique se o produto aparece na lista de produtos</li>
+    </ol>
+    
+    <p><strong>Nota:</strong> Este é um formulário de teste. Depois de confirmar que funciona, use o formulário modal na página oficial de produção.</p>
+</body>
+</html>

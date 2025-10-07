@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <defs>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#007fa3"/>
+      <stop offset="80%" style="stop-color:#007fa3"/>
+      <stop offset="100%" style="stop-color:#d4a853"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Logo text "Aguaboa" -->
+  <text x="200" y="50" text-anchor="middle" fill="url(#textGradient)" 
+        font-family="Georgia, serif" font-size="42" font-style="italic" font-weight="normal">
+    Aguaboa
+  </text>
+  
+  <!-- Subtitle "ÁGUAS DE SANTA BÁRBARA" -->
+  <text x="200" y="75" text-anchor="middle" fill="#007fa3" 
+        font-family="Arial, sans-serif" font-size="12" font-weight="normal" letter-spacing="2px">
+    ÁGUAS DE SANTA BÁRBARA
+  </text>
+  
+  <!-- Decorative swoosh -->
+  <path d="M 320 35 Q 340 25 360 35 Q 380 45 390 35" 
+        stroke="#d4a853" stroke-width="3" fill="none" opacity="0.8"/>
+</svg>

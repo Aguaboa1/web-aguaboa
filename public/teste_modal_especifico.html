@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Modal - Clique Duplo</title>
+    <style>
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1000; }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 6px; width: 400px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #333; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+        #log { position: fixed; bottom: 0; left: 0; width: 100%; height: 150px; background: #f0f0f0; border-top: 2px solid #ccc; overflow-y: auto; padding: 10px; box-sizing: border-box; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Teste Modal Específico</h1>
+    <p>Este teste simula exatamente o modal do sistema.</p>
+    
+    <button onclick="openModal()">➕ Nova Ação</button>
+    
+    <!-- Modal exatamente como no sistema -->
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <div style="padding: 15px 20px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Nova Ação</h3>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #666;">×</button>
+            </div>
+            
+            <form style="padding: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #333;">Data:</label>
+                    <input type="date" value="2025-10-01" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #333;">Descrição:</label>
+                    <textarea rows="3" required placeholder="Descreva a ação realizada..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; resize: vertical; box-sizing: border-box; font-family: inherit;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #333;">Arquivo/Foto (opcional):</label>
+                    <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                    <small style="display: block; margin-top: 3px; font-size: 12px; color: #6c757d;">Formatos aceitos: imagens, PDF, Word</small>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="closeModal()" style="padding: 8px 16px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; background: #6c757d; color: white;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; background: #28a745; color: white;">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="log"></div>
+    
+    <script>
+        let clickCount = 0;
+        
+        function addLog(message) {
+            const log = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `[${time}] ${message}<br>`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function openModal() {
+            addLog('📂 Modal aberto');
+            document.getElementById('actionModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            addLog('❌ Modal fechado');
+            document.getElementById('actionModal').style.display = 'none';
+        }
+        
+        // Monitorar o input file específico
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            
+            ['click', 'mousedown', 'mouseup', 'focus'].forEach(eventType => {
+                fileInput.addEventListener(eventType, function(e) {
+                    if (eventType === 'click') {
+                        clickCount++;
+                        addLog(`🔥 INPUT FILE CLICADO - Clique #${clickCount}`);
+                    } else {
+                        addLog(`📝 ${eventType.toUpperCase()} no input file`);
+                    }
+                });
+            });
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    addLog(`✅ Arquivo selecionado: ${this.files[0].name}`);
+                } else {
+                    addLog(`🔄 Input file resetado`);
+                }
+            });
+            
+            addLog('🚀 Sistema carregado - Abra o modal e teste o input file');
+        });
+    </script>
+</body>
+</html>

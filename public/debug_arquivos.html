@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Debug - Arquivos de Ações</title>
+</head>
+<body>
+    <h1>🔍 Debug - Arquivos de Ações</h1>
+    
+    <div style="background: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
+        <h3>Ações com Arquivos</h3>
+        <div id="acoes"></div>
+    </div>
+    
+    <div style="background: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
+        <h3>Teste de URLs</h3>
+        <div id="testes"></div>
+    </div>
+
+    <script>
+        async function carregarAcoes() {
+            try {
+                // Primeiro fazer login automático
+                await fetch('/login_auto.php');
+                
+                // Buscar ações de um cliente específico (assumindo ID 1)
+                const response = await fetch('/crm/client/1');
+                
+                if (response.ok) {
+                    document.getElementById('acoes').innerHTML = '✅ Cliente carregado com sucesso!';
+                } else {
+                    document.getElementById('acoes').innerHTML = '❌ Erro ao carregar cliente';
+                }
+                
+                // Testar URLs de arquivos conhecidos
+                testarArquivos();
+                
+            } catch (error) {
+                document.getElementById('acoes').innerHTML = '❌ Erro: ' + error.message;
+            }
+        }
+        
+        async function testarArquivos() {
+            const arquivos = [
+                'teste_1759371710.txt',
+                '68dde12b90bfa_1759371563.jpg',
+                '68dddbf32cea8_1759370227.png'
+            ];
+            
+            let html = '';
+            
+            for (const arquivo of arquivos) {
+                const url = `/uploads/actions/${arquivo}`;
+                try {
+                    const response = await fetch(url);
+                    const status = response.ok ? '✅' : '❌';
+                    const statusText = response.status + ' ' + response.statusText;
+                    
+                    html += `<div>
+                        ${status} <a href="${url}" target="_blank">${arquivo}</a> - ${statusText}
+                    </div>`;
+                } catch (error) {
+                    html += `<div>❌ ${arquivo} - Erro: ${error.message}</div>`;
+                }
+            }
+            
+            document.getElementById('testes').innerHTML = html;
+        }
+        
+        // Carregar ao iniciar
+        carregarAcoes();
+    </script>
+</body>
+</html>

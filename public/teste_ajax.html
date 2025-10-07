@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste AJAX - Ações</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #333; color: #fff; padding: 10px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Teste AJAX - Sistema de Ações</h1>
+    
+    <div class="test-section">
+        <h3>1. Teste Buscar Ação</h3>
+        <button onclick="testGetAction()">Buscar Ação ID 3</button>
+        <div id="getResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Teste Atualizar Ação</h3>
+        <button onclick="testUpdateAction()">Atualizar Ação ID 3</button>
+        <div id="updateResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Logs de Debug</h3>
+        <div id="debugLogs" style="background: #f0f0f0; padding: 10px; border-radius: 3px; height: 200px; overflow-y: auto;"></div>
+        <button onclick="clearLogs()">Limpar Logs</button>
+    </div>
+
+    <script>
+        function log(message) {
+            const debugDiv = document.getElementById('debugLogs');
+            const time = new Date().toLocaleTimeString();
+            debugDiv.innerHTML += `[${time}] ${message}\n`;
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function testGetAction() {
+            log('🔍 Testando busca de ação...');
+            
+            fetch('/action/3')
+            .then(response => {
+                log(`Status: ${response.status}`);
+                log(`Content-Type: ${response.headers.get('content-type')}`);
+                return response.text();
+            })
+            .then(text => {
+                log(`Raw Response: ${text}`);
+                try {
+                    const data = JSON.parse(text);
+                    log('✅ JSON válido!');
+                    document.getElementById('getResult').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    log('❌ Erro no JSON: ' + e.message);
+                    document.getElementById('getResult').innerHTML = `<pre style="color: red;">Erro: ${e.message}\nResponse: ${text}</pre>`;
+                }
+            })
+            .catch(error => {
+                log('❌ Erro na requisição: ' + error.message);
+                document.getElementById('getResult').innerHTML = `<pre style="color: red;">Erro: ${error.message}</pre>`;
+            });
+        }
+
+        function testUpdateAction() {
+            log('✏️ Testando atualização de ação...');
+            
+            const formData = new FormData();
+            formData.append('descricao', 'Ação atualizada via teste - ' + new Date().toLocaleString());
+            formData.append('data_acao', '2025-10-01');
+            
+            fetch('/action/3', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-HTTP-Method-Override': 'PUT'
+                }
+            })
+            .then(response => {
+                log(`Status: ${response.status}`);
+                log(`Content-Type: ${response.headers.get('content-type')}`);
+                return response.text();
+            })
+            .then(text => {
+                log(`Raw Response: ${text}`);
+                try {
+                    const data = JSON.parse(text);
+                    log('✅ JSON válido!');
+                    document.getElementById('updateResult').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    log('❌ Erro no JSON: ' + e.message);
+                    document.getElementById('updateResult').innerHTML = `<pre style="color: red;">Erro: ${e.message}\nResponse: ${text}</pre>`;
+                }
+            })
+            .catch(error => {
+                log('❌ Erro na requisição: ' + error.message);
+                document.getElementById('updateResult').innerHTML = `<pre style="color: red;">Erro: ${error.message}</pre>`;
+            });
+        }
+
+        function clearLogs() {
+            document.getElementById('debugLogs').innerHTML = '';
+        }
+
+        // Log inicial
+        log('🚀 Página carregada. Pronto para testes!');
+    </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste Prazo de Conclusão</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fafafa; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 12px 20px; margin: 8px 4px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 14px; }
+        button:hover { background: #0056b3; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 80px; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        .checkbox-group { display: flex; align-items: center; margin: 10px 0; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 10px; }
+        .prazo-field { display: none; background: #e3f2fd; padding: 10px; border-radius: 4px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste: Prazo de Conclusão nas Ações</h1>
+        <p>Este teste verifica se a funcionalidade de prazo de conclusão está funcionando corretamente.</p>
+        
+        <div class="test-section">
+            <h3>1️⃣ Teste de Criação com Prazo</h3>
+            <form id="formCriarAcao">
+                <div class="form-group">
+                    <label>Cliente ID:</label>
+                    <select name="client_id" required>
+                        <option value="1">Cliente ID 1</option>
+                        <option value="2">Cliente ID 2</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Data da Ação:</label>
+                    <input type="date" name="data_acao" required value="<?= date('Y-m-d') ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <textarea name="descricao" required>Teste de ação com prazo de conclusão - <?= date('H:i:s') ?></textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="temPrazoTeste" onchange="togglePrazoTeste()">
+                    <label for="temPrazoTeste">📅 Esta ação tem prazo de conclusão</label>
+                </div>
+                
+                <div id="prazoFieldTeste" class="prazo-field">
+                    <label>Prazo de Conclusão:</label>
+                    <input type="month" name="prazo_conclusao" value="2025-11">
+                    <small>Exemplo: 11/2025 (novembro de 2025)</small>
+                </div>
+                
+                <button type="submit">Criar Ação com Prazo</button>
+            </form>
+            <div id="resultadoCriacao"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>2️⃣ Teste de Carregamento</h3>
+            <button onclick="carregarAcao()">Carregar Ação ID 1</button>
+            <div id="resultadoCarregamento"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3️⃣ Teste de Edição com Prazo</h3>
+            <form id="formEditarAcao" style="display: none;">
+                <input type="hidden" id="editActionId">
+                
+                <div class="form-group">
+                    <label>Data da Ação:</label>
+                    <input type="date" id="editDataAcao" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <textarea id="editDescricao" required></textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="editTemPrazo" onchange="toggleEditPrazoTeste()">
+                    <label for="editTemPrazo">📅 Esta ação tem prazo de conclusão</label>
+                </div>
+                
+                <div id="editPrazoFieldTeste" class="prazo-field">
+                    <label>Prazo de Conclusão:</label>
+                    <input type="month" id="editPrazoInput" name="prazo_conclusao">
+                    <small>Altere para testar a edição</small>
+                </div>
+                
+                <button type="submit">Salvar Alterações</button>
+            </form>
+            <div id="resultadoEdicao"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4️⃣ Log de Testes</h3>
+            <button onclick="limparLog()">Limpar Log</button>
+            <pre id="logTestes"></pre>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('logTestes');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+        }
+        
+        function limparLog() {
+            document.getElementById('logTestes').textContent = '';
+        }
+        
+        function togglePrazoTeste() {
+            const checkbox = document.getElementById('temPrazoTeste');
+            const prazoField = document.getElementById('prazoFieldTeste');
+            prazoField.style.display = checkbox.checked ? 'block' : 'none';
+        }
+        
+        function toggleEditPrazoTeste() {
+            const checkbox = document.getElementById('editTemPrazo');
+            const prazoField = document.getElementById('editPrazoFieldTeste');
+            prazoField.style.display = checkbox.checked ? 'block' : 'none';
+        }
+        
+        // Criar ação
+        document.getElementById('formCriarAcao').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            log('🔄 Criando nova ação...');
+            
+            const formData = new FormData(this);
+            
+            // Se checkbox não marcado, remover prazo
+            if (!document.getElementById('temPrazoTeste').checked) {
+                formData.delete('prazo_conclusao');
+            }
+            
+            try {
+                const response = await fetch('/action', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                log(`Resultado criação: ${JSON.stringify(data)}`);
+                
+                const resultDiv = document.getElementById('resultadoCriacao');
+                if (data.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Ação criada com sucesso!</div>';
+                    log('✅ Ação criada com sucesso');
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Erro: ${data.message}</div>`;
+                    log(`❌ Erro na criação: ${data.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Erro na requisição: ${error.message}`);
+                document.getElementById('resultadoCriacao').innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
+            }
+        });
+        
+        // Carregar ação
+        async function carregarAcao() {
+            log('📥 Carregando ação...');
+            
+            try {
+                const response = await fetch('/action/1');
+                const data = await response.json();
+                
+                log(`Ação carregada: ${JSON.stringify(data)}`);
+                
+                // Mostrar resultado
+                const resultDiv = document.getElementById('resultadoCarregamento');
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Ação carregada!</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+                // Preencher formulário de edição
+                document.getElementById('editActionId').value = data.id;
+                document.getElementById('editDataAcao').value = data.data_acao;
+                document.getElementById('editDescricao').value = data.descricao;
+                
+                // Configurar prazo
+                const temPrazo = data.prazo_conclusao;
+                if (temPrazo) {
+                    document.getElementById('editTemPrazo').checked = true;
+                    const prazoDate = new Date(temPrazo + 'T00:00:00');
+                    const anoMes = prazoDate.getFullYear() + '-' + String(prazoDate.getMonth() + 1).padStart(2, '0');
+                    document.getElementById('editPrazoInput').value = anoMes;
+                    toggleEditPrazoTeste();
+                } else {
+                    document.getElementById('editTemPrazo').checked = false;
+                    toggleEditPrazoTeste();
+                }
+                
+                document.getElementById('formEditarAcao').style.display = 'block';
+                log('✅ Formulário de edição preenchido');
+                
+            } catch (error) {
+                log(`❌ Erro ao carregar: ${error.message}`);
+                document.getElementById('resultadoCarregamento').innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
+            }
+        }
+        
+        // Editar ação
+        document.getElementById('formEditarAcao').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            log('📝 Editando ação...');
+            
+            const actionId = document.getElementById('editActionId').value;
+            const formData = new FormData();
+            
+            formData.append('data_acao', document.getElementById('editDataAcao').value);
+            formData.append('descricao', document.getElementById('editDescricao').value);
+            
+            if (document.getElementById('editTemPrazo').checked) {
+                formData.append('prazo_conclusao', document.getElementById('editPrazoInput').value);
+            }
+            
+            try {
+                const response = await fetch(`/action/${actionId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                log(`Resultado edição: ${JSON.stringify(data)}`);
+                
+                const resultDiv = document.getElementById('resultadoEdicao');
+                if (data.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Ação editada com sucesso!</div>';
+                    log('✅ Ação editada com sucesso');
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Erro: ${data.message}</div>`;
+                    log(`❌ Erro na edição: ${data.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Erro na requisição: ${error.message}`);
+                document.getElementById('resultadoEdicao').innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
+            }
+        });
+        
+        // Log inicial
+        log('🚀 Sistema de teste carregado');
+        log('Pronto para testar funcionalidade de prazo de conclusão');
+    </script>
+</body>
+</html>

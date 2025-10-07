@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🔍 Debug Edição - Passo a Passo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .step { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 3px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .form-group { margin: 10px 0; }
+        input, textarea { width: 300px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Edição de Ação - Passo a Passo</h1>
+    
+    <div class="step">
+        <h3>Passo 1: Carregar Ação</h3>
+        <button onclick="carregarAcao()">Carregar Ação ID 1</button>
+        <div id="resultado1"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Passo 2: Formulário de Edição</h3>
+        <div class="form-group">
+            <label>Descrição:</label><br>
+            <textarea id="descricao" placeholder="Digite a nova descrição"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Data:</label><br>
+            <input type="date" id="dataAcao">
+        </div>
+        <button onclick="editarAcao()">Editar Ação</button>
+        <div id="resultado2"></div>
+    </div>
+    
+    <div class="step">
+        <h3>Passo 3: Debug Completo</h3>
+        <button onclick="debugCompleto()">Debug Completo</button>
+        <div id="resultado3"></div>
+    </div>
+
+    <script>
+        let acaoCarregada = null;
+        
+        async function carregarAcao() {
+            console.log('🔍 Carregando ação...');
+            
+            try {
+                const response = await fetch('/action/1');
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                const data = await response.json();
+                console.log('Data received:', data);
+                
+                acaoCarregada = data;
+                
+                // Preencher campos
+                document.getElementById('descricao').value = data.descricao || '';
+                document.getElementById('dataAcao').value = data.data_acao || '';
+                
+                document.getElementById('resultado1').innerHTML = `
+                    <div class="success">
+                        <h4>✅ Ação carregada com sucesso!</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('resultado1').innerHTML = `
+                    <div class="error">
+                        <h4>❌ Erro ao carregar ação</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        async function editarAcao() {
+            console.log('📝 Editando ação...');
+            
+            if (!acaoCarregada) {
+                alert('Carregue a ação primeiro!');
+                return;
+            }
+            
+            const descricao = document.getElementById('descricao').value;
+            const dataAcao = document.getElementById('dataAcao').value;
+            
+            console.log('Dados para envio:', { descricao, dataAcao });
+            
+            try {
+                const formData = new FormData();
+                formData.append('descricao', descricao);
+                formData.append('data_acao', dataAcao);
+                
+                console.log('FormData criado:', Array.from(formData.entries()));
+                
+                const response = await fetch('/action/1', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log('Update response status:', response.status);
+                console.log('Update response headers:', [...response.headers.entries()]);
+                
+                // Tentar ler o response como texto primeiro
+                const responseText = await response.text();
+                console.log('Raw response text:', responseText);
+                
+                // Tentar parsear como JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                    console.log('Parsed JSON:', data);
+                } catch (parseError) {
+                    console.error('Erro ao parsear JSON:', parseError);
+                    data = { error: 'Resposta não é JSON válido', raw: responseText };
+                }
+                
+                document.getElementById('resultado2').innerHTML = `
+                    <div class="${data.success ? 'success' : 'error'}">
+                        <h4>${data.success ? '✅ Sucesso!' : '❌ Erro!'}</h4>
+                        <pre>Status: ${response.status}
+Raw response: ${responseText}
+Parsed: ${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('resultado2').innerHTML = `
+                    <div class="error">
+                        <h4>❌ Erro na requisição</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        async function debugCompleto() {
+            console.log('🔧 Debug completo...');
+            
+            const debugInfo = {
+                currentURL: window.location.href,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                acaoCarregada: acaoCarregada
+            };
+            
+            document.getElementById('resultado3').innerHTML = `
+                <div>
+                    <h4>🔧 Informações de Debug</h4>
+                    <pre>${JSON.stringify(debugInfo, null, 2)}</pre>
+                </div>
+            `;
+        }
+        
+        // Log inicial
+        console.log('🚀 Debug page loaded');
+    </script>
+</body>
+</html>

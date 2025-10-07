@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🎯 Teste Final Definitivo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .result { padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        button { padding: 12px 20px; margin: 8px 4px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 14px; }
+        button.success { background: #28a745; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Teste Final Definitivo</h1>
+        <p>Este é o teste definitivo para confirmar que a edição de ações com prazo está funcionando.</p>
+        
+        <button onclick="testeCompleto()" class="success">🚀 Executar Teste Final</button>
+        
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        async function testeCompleto() {
+            const resultDiv = document.getElementById('resultado');
+            resultDiv.innerHTML = '<div class="warning">🔄 Executando teste final...</div>';
+            
+            let log = [];
+            
+            try {
+                // 1. Testar GET da ação
+                log.push('📥 1. Testando carregamento da ação...');
+                
+                const getResponse = await fetch('/action/1');
+                log.push(`Status GET: ${getResponse.status}`);
+                
+                const actionData = await getResponse.json();
+                log.push(`Dados carregados: ${JSON.stringify(actionData)}`);
+                
+                if (!actionData.id) {
+                    throw new Error('Ação não encontrada');
+                }
+                
+                // 2. Testar POST de edição
+                log.push('📝 2. Testando edição da ação...');
+                
+                const formData = new FormData();
+                formData.append('descricao', 'TESTE FINAL DEFINITIVO - ' + new Date().toLocaleTimeString());
+                formData.append('data_acao', '2025-10-02');
+                formData.append('prazo_conclusao', '2025-12');
+                
+                log.push('FormData criado com: descricao, data_acao, prazo_conclusao');
+                
+                const postResponse = await fetch('/action/1', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log.push(`Status POST: ${postResponse.status}`);
+                
+                const responseText = await postResponse.text();
+                log.push(`Resposta bruta: "${responseText}"`);
+                
+                let postData;
+                try {
+                    postData = JSON.parse(responseText);
+                    log.push(`JSON parseado: ${JSON.stringify(postData)}`);
+                } catch (e) {
+                    throw new Error(`Resposta não é JSON válido: ${responseText}`);
+                }
+                
+                // 3. Verificar resultado
+                if (postData.success) {
+                    log.push('🎉 TESTE FINAL PASSOU!');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>🎉 SUCESSO TOTAL!</h3>
+                            <p><strong>A edição de ações com prazo está funcionando perfeitamente!</strong></p>
+                            <p>Mensagem: ${postData.message}</p>
+                        </div>
+                        <h4>📋 Log do Teste:</h4>
+                        <pre>${log.join('\\n')}</pre>
+                        <div class="result success">
+                            <h4>✅ Status Final:</h4>
+                            <ul>
+                                <li>✅ Conexão com API funcionando</li>
+                                <li>✅ Carregamento de ação funcionando</li>
+                                <li>✅ Edição com prazo funcionando</li>
+                                <li>✅ Resposta JSON válida</li>
+                                <li>✅ Coluna prazo_conclusao criada e funcional</li>
+                            </ul>
+                            <p><strong>🚀 AGORA VOCÊ PODE USAR O SISTEMA NORMALMENTE!</strong></p>
+                        </div>
+                    `;
+                } else {
+                    log.push('❌ TESTE FALHOU');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>❌ Teste Falhou</h3>
+                            <p><strong>Erro:</strong> ${postData.message}</p>
+                        </div>
+                        <h4>📋 Log do Teste:</h4>
+                        <pre>${log.join('\\n')}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                log.push(`💥 ERRO FATAL: ${error.message}`);
+                
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>💥 Erro Fatal</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                    </div>
+                    <h4>📋 Log do Teste:</h4>
+                    <pre>${log.join('\\n')}</pre>
+                `;
+            }
+        }
+        
+        // Executar automaticamente após 2 segundos
+        setTimeout(testeCompleto, 2000);
+    </script>
+</body>
+</html>

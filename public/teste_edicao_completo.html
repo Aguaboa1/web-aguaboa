@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Edição de Ação</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; border: none; }
+        .btn-success { background: #28a745; color: white; border: none; }
+        #result { background: #f8f9fa; padding: 15px; margin-top: 20px; border-radius: 5px; }
+        #log { background: #f0f0f0; padding: 10px; margin-top: 10px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Teste Edição de Ação</h1>
+    
+    <div>
+        <button class="btn-primary" onclick="carregarAcao()">1. Carregar Ação ID 1</button>
+        <button class="btn-success" onclick="atualizarAcao()">2. Atualizar Ação</button>
+    </div>
+    
+    <div class="form-group">
+        <label>ID da Ação:</label>
+        <input type="number" id="actionId" value="1" readonly>
+    </div>
+    
+    <div class="form-group">
+        <label>Data:</label>
+        <input type="date" id="dataAcao">
+    </div>
+    
+    <div class="form-group">
+        <label>Descrição:</label>
+        <textarea id="descricao" rows="3"></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label>Arquivo Atual:</label>
+        <div id="arquivoAtual">Nenhum</div>
+    </div>
+    
+    <div class="form-group">
+        <label>Novo Arquivo (opcional):</label>
+        <input type="file" id="novoArquivo" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx">
+    </div>
+    
+    <div id="result"></div>
+    <div id="log"></div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${time}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        async function carregarAcao() {
+            const actionId = document.getElementById('actionId').value;
+            log(`📥 Carregando ação ID ${actionId}...`);
+            
+            try {
+                const response = await fetch(`/action/${actionId}`);
+                log(`Status: ${response.status}`);
+                
+                const data = await response.json();
+                log(`Dados recebidos: ${JSON.stringify(data)}`);
+                
+                // Preencher formulário
+                document.getElementById('dataAcao').value = data.data_acao;
+                document.getElementById('descricao').value = data.descricao;
+                
+                const arquivoDiv = document.getElementById('arquivoAtual');
+                if (data.arquivo) {
+                    arquivoDiv.innerHTML = `<a href="/uploads/actions/${data.arquivo}" target="_blank">📎 ${data.arquivo}</a>`;
+                } else {
+                    arquivoDiv.textContent = 'Nenhum arquivo anexado';
+                }
+                
+                document.getElementById('result').innerHTML = '<div style="color: green;">✅ Ação carregada com sucesso!</div>';
+                log('✅ Ação carregada com sucesso');
+                
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`);
+                document.getElementById('result').innerHTML = `<div style="color: red;">❌ Erro: ${error.message}</div>`;
+            }
+        }
+        
+        async function atualizarAcao() {
+            const actionId = document.getElementById('actionId').value;
+            const dataAcao = document.getElementById('dataAcao').value;
+            const descricao = document.getElementById('descricao').value;
+            const novoArquivo = document.getElementById('novoArquivo').files[0];
+            
+            log(`📤 Atualizando ação ID ${actionId}...`);
+            log(`Data: ${dataAcao}`);
+            log(`Descrição: ${descricao}`);
+            log(`Novo arquivo: ${novoArquivo ? novoArquivo.name : 'Nenhum'}`);
+            
+            try {
+                const formData = new FormData();
+                formData.append('descricao', descricao);
+                formData.append('data_acao', dataAcao);
+                
+                if (novoArquivo) {
+                    formData.append('arquivo', novoArquivo);
+                }
+                
+                const response = await fetch(`/action/${actionId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`Status: ${response.status}`);
+                
+                const result = await response.json();
+                log(`Resultado: ${JSON.stringify(result)}`);
+                
+                if (result.success) {
+                    document.getElementById('result').innerHTML = '<div style="color: green;">✅ Ação atualizada com sucesso!</div>';
+                    log('✅ Ação atualizada com sucesso');
+                } else {
+                    document.getElementById('result').innerHTML = `<div style="color: red;">❌ Erro: ${result.message}</div>`;
+                    log(`❌ Erro: ${result.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`);
+                document.getElementById('result').innerHTML = `<div style="color: red;">❌ Erro: ${error.message}</div>`;
+            }
+        }
+        
+        // Log inicial
+        log('🚀 Sistema carregado - Pronto para testar');
+    </script>
+</body>
+</html>

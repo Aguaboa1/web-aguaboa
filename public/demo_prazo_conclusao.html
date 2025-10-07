@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Demo: Prazo de Conclusão</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .demo-section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+        .modal-demo { border: 2px solid #007bff; background: white; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 60px; }
+        .checkbox-group { display: flex; align-items: center; margin: 15px 0; padding: 10px; background: #e3f2fd; border-radius: 4px; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 10px; }
+        .prazo-field { background: #f0f8ff; padding: 15px; border-radius: 4px; margin-top: 10px; border-left: 4px solid #007bff; }
+        button { padding: 12px 20px; margin: 8px 4px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 14px; }
+        button.secondary { background: #6c757d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #dee2e6; text-align: left; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .prazo-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .prazo-ok { background: #d4edda; color: #155724; }
+        .prazo-atencao { background: #fff3cd; color: #856404; }
+        .prazo-vencido { background: #f8d7da; color: #721c24; }
+        .exemplo { background: #e8f5e8; padding: 15px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Demo: Funcionalidade de Prazo de Conclusão</h1>
+        <p>Esta demonstração mostra como a funcionalidade de prazo de conclusão funciona nas ações.</p>
+        
+        <div class="demo-section">
+            <h2>💡 Como Funciona</h2>
+            <div class="exemplo">
+                <h4>🎯 Objetivo:</h4>
+                <p>Permitir definir um prazo (mês/ano) para conclusão de ações, facilitando o acompanhamento e controle de prazos.</p>
+                
+                <h4>✨ Características:</h4>
+                <ul>
+                    <li>✅ <strong>Opcional:</strong> Nem toda ação precisa ter prazo</li>
+                    <li>📅 <strong>Formato:</strong> Mês/Ano (ex: 11/2025 = novembro de 2025)</li>
+                    <li>🚦 <strong>Indicadores visuais:</strong> Verde (no prazo), Amarelo (próximo), Vermelho (vencido)</li>
+                    <li>🔄 <strong>Editável:</strong> Pode ser alterado a qualquer momento</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📝 Modal de Nova Ação</h2>
+            <div class="modal-demo">
+                <h3>Nova Ação</h3>
+                
+                <div class="form-group">
+                    <label>Data:</label>
+                    <input type="date" value="<?= date('Y-m-d') ?>" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <textarea readonly>Implementar nova funcionalidade no sistema...</textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="demoPrazo" onchange="toggleDemoPrazo()" checked>
+                    <label for="demoPrazo">📅 Esta ação tem prazo de conclusão</label>
+                </div>
+                
+                <div id="demoPrazoField" class="prazo-field">
+                    <label>Prazo de Conclusão:</label>
+                    <input type="month" value="2025-11" readonly>
+                    <small style="color: #666;">Escolha o mês e ano limite para conclusão (ex: novembro de 2025)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Arquivo/Foto (opcional):</label>
+                    <input type="file" disabled>
+                </div>
+                
+                <button>Salvar</button>
+                <button class="secondary">Cancelar</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📋 Visualização na Lista de Ações</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Prazo</th>
+                        <th>Arquivo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>15/10/2025</td>
+                        <td>Implementar nova funcionalidade</td>
+                        <td>
+                            <span class="prazo-badge prazo-ok">🗓️ 11/2025</span>
+                        </td>
+                        <td>📎 Ver arquivo</td>
+                        <td>✏️ 🗑️</td>
+                    </tr>
+                    <tr>
+                        <td>10/10/2025</td>
+                        <td>Revisar documentação</td>
+                        <td>
+                            <span class="prazo-badge prazo-atencao">🗓️ 10/2025</span>
+                        </td>
+                        <td>-</td>
+                        <td>✏️ 🗑️</td>
+                    </tr>
+                    <tr>
+                        <td>05/09/2025</td>
+                        <td>Corrigir bug crítico</td>
+                        <td>
+                            <span class="prazo-badge prazo-vencido">🗓️ 09/2025</span>
+                        </td>
+                        <td>📎 Ver arquivo</td>
+                        <td>✏️ 🗑️</td>
+                    </tr>
+                    <tr>
+                        <td>01/10/2025</td>
+                        <td>Reunião de alinhamento</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>✏️ 🗑️</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 15px;">
+                <h4>🚦 Legenda dos Prazos:</h4>
+                <div style="display: flex; gap: 15px; margin-top: 10px;">
+                    <span class="prazo-badge prazo-ok">🗓️ No prazo</span>
+                    <span class="prazo-badge prazo-atencao">🗓️ Próximo do vencimento</span>
+                    <span class="prazo-badge prazo-vencido">🗓️ Vencido</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>✏️ Modal de Edição</h2>
+            <div class="modal-demo">
+                <h3>Editar Ação</h3>
+                
+                <div class="form-group">
+                    <label>Data:</label>
+                    <input type="date" value="2025-10-15" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <textarea readonly>Implementar nova funcionalidade no sistema...</textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="demoEditPrazo" onchange="toggleDemoEditPrazo()" checked>
+                    <label for="demoEditPrazo">📅 Esta ação tem prazo de conclusão</label>
+                </div>
+                
+                <div id="demoEditPrazoField" class="prazo-field">
+                    <label>Prazo de Conclusão:</label>
+                    <input type="month" value="2025-12" readonly>
+                    <small style="color: #666;">Altere o prazo conforme necessário</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Arquivo Atual:</label>
+                    <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                        📎 documento.pdf
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Novo Arquivo (opcional):</label>
+                    <input type="file" disabled>
+                </div>
+                
+                <button>Salvar Alterações</button>
+                <button class="secondary">Cancelar</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎯 Casos de Uso</h2>
+            <div class="exemplo">
+                <h4>📋 Exemplos práticos:</h4>
+                <ul>
+                    <li><strong>Projeto de desenvolvimento:</strong> "Entregar módulo até dezembro/2025"</li>
+                    <li><strong>Documentação:</strong> "Finalizar manual até janeiro/2026"</li>
+                    <li><strong>Revisão contratual:</strong> "Renovar contrato até março/2026"</li>
+                    <li><strong>Treinamento:</strong> "Concluir capacitação até fevereiro/2026"</li>
+                </ul>
+                
+                <h4>✨ Benefícios:</h4>
+                <ul>
+                    <li>🎯 <strong>Controle visual:</strong> Identifica rapidamente ações vencidas ou próximas do prazo</li>
+                    <li>📊 <strong>Organização:</strong> Facilita o planejamento e priorização de tarefas</li>
+                    <li>⚡ <strong>Agilidade:</strong> Não obriga definir prazo para todas as ações</li>
+                    <li>🔄 <strong>Flexibilidade:</strong> Permite alterar prazos conforme necessário</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDemoPrazo() {
+            const checkbox = document.getElementById('demoPrazo');
+            const prazoField = document.getElementById('demoPrazoField');
+            prazoField.style.display = checkbox.checked ? 'block' : 'none';
+        }
+        
+        function toggleDemoEditPrazo() {
+            const checkbox = document.getElementById('demoEditPrazo');
+            const prazoField = document.getElementById('demoEditPrazoField');
+            prazoField.style.display = checkbox.checked ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

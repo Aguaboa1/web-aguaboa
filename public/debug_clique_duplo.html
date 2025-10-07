@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Clique Duplo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { border: 2px solid red; padding: 20px; margin: 20px 0; }
+        .file-input { border: 2px solid blue; margin: 10px 0; }
+        #log { background: #f0f0f0; padding: 10px; height: 200px; overflow-y: auto; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug - Clique Duplo no Input File</h1>
+    
+    <div class="test-container">
+        <h3>Teste 1: Input File Simples</h3>
+        <input type="file" id="test1" class="file-input" accept=".jpg,.jpeg,.png,.gif,.pdf">
+        <div>Status: <span id="status1">Aguardando...</span></div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Teste 2: Input File com Form</h3>
+        <form>
+            <input type="file" id="test2" class="file-input" accept=".jpg,.jpeg,.png,.gif,.pdf">
+            <div>Status: <span id="status2">Aguardando...</span></div>
+        </form>
+    </div>
+    
+    <div class="test-container">
+        <h3>Teste 3: Input File com Estilo Inline</h3>
+        <input type="file" id="test3" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" accept=".jpg,.jpeg,.png,.gif,.pdf">
+        <div>Status: <span id="status3">Aguardando...</span></div>
+    </div>
+    
+    <div id="log"></div>
+    
+    <script>
+        let globalClickCount = 0;
+        
+        function addLog(message) {
+            const log = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `[${time}] ${message}<br>`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function setupTest(inputId, statusId, testName) {
+            const input = document.getElementById(inputId);
+            const status = document.getElementById(statusId);
+            let clickCount = 0;
+            
+            // Monitorar TODOS os tipos de eventos
+            ['click', 'mousedown', 'mouseup', 'focus', 'change'].forEach(eventType => {
+                input.addEventListener(eventType, function(e) {
+                    if (eventType === 'click') {
+                        clickCount++;
+                        globalClickCount++;
+                        addLog(`🔥 ${testName} - CLICK #${clickCount} (Global: #${globalClickCount})`);
+                        status.textContent = `Cliques: ${clickCount}`;
+                    } else {
+                        addLog(`📝 ${testName} - ${eventType.toUpperCase()}`);
+                    }
+                });
+            });
+            
+            input.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    addLog(`✅ ${testName} - Arquivo selecionado: ${this.files[0].name}`);
+                    status.textContent += ` | Arquivo: ${this.files[0].name}`;
+                }
+            });
+        }
+        
+        // Configurar todos os testes
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('🚀 Página carregada - Iniciando testes');
+            addLog('👆 Clique em qualquer input file e observe os logs');
+            
+            setupTest('test1', 'status1', 'Teste 1');
+            setupTest('test2', 'status2', 'Teste 2');
+            setupTest('test3', 'status3', 'Teste 3');
+            
+            // Detectar cliques globais
+            document.addEventListener('click', function(e) {
+                if (e.target.type !== 'file') {
+                    addLog(`🌍 Clique global em: ${e.target.tagName}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Final - Ações</title>
+</head>
+<body>
+    <h1>Teste Final - Sistema de Ações</h1>
+    
+    <button onclick="testarTudo()">🚀 Testar Tudo</button>
+    
+    <div id="resultado" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px;"></div>
+
+    <script>
+        async function testarTudo() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = '🔄 Testando...\n';
+            
+            try {
+                // 1. Fazer login automático
+                resultado.innerHTML += '1. Fazendo login...\n';
+                await fetch('/login_auto.php');
+                resultado.innerHTML += '✅ Login OK\n';
+                
+                // 2. Testar busca de ação
+                resultado.innerHTML += '2. Buscando ação...\n';
+                const getResponse = await fetch('/action/3');
+                const getData = await getResponse.text();
+                resultado.innerHTML += `📄 Response GET: ${getData}\n`;
+                
+                // 3. Testar atualização
+                resultado.innerHTML += '3. Atualizando ação...\n';
+                const formData = new FormData();
+                formData.append('descricao', 'Teste final - ' + new Date().toLocaleString());
+                formData.append('data_acao', '2025-10-01');
+                
+                const updateResponse = await fetch('/action/3', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const updateData = await updateResponse.text();
+                resultado.innerHTML += `📄 Response UPDATE: ${updateData}\n`;
+                
+                try {
+                    const json = JSON.parse(updateData);
+                    if (json.success) {
+                        resultado.innerHTML += '🎉 SUCESSO! Ação atualizada!\n';
+                        resultado.style.background = '#d4edda';
+                    } else {
+                        resultado.innerHTML += '❌ Erro: ' + json.message + '\n';
+                        resultado.style.background = '#f8d7da';
+                    }
+                } catch (e) {
+                    resultado.innerHTML += '❌ JSON inválido\n';
+                    resultado.style.background = '#f8d7da';
+                }
+                
+            } catch (error) {
+                resultado.innerHTML += '❌ Erro geral: ' + error.message + '\n';
+                resultado.style.background = '#f8d7da';
+            }
+        }
+    </script>
+</body>
+</html>
